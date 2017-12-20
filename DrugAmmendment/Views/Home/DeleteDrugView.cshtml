@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "Delete Drug";
+}
+
+<link href="~/Scripts/jquery-ui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/Scripts/jquery-ui.js"></script>
+<h2 class="col-lg-offset-5">Delete Drug</h2>
+
+    <form action="@Url.Action("DeleteDrug", "Home")" method="post">
+        <div class="col-lg-offset-4 col-md-6">
+            <label>Delivery: </label>
+            <input type="text" name="client" id="client" value="@TempData["Client"]" readonly class="form-control" />
+            <label>Citeria Type: </label>
+            <input type="text" name="criteriaType" id="criteriaType" value="@TempData["CriteriaType"]" readonly class="form-control" />
+
+            <label>Criteria: </label>
+            <input type="text" name="criteria" id="criteria" value="" class="form-control" /><br />
+
+            <input type="submit" name="btnSubmit" id="btnSubmit" value="DELETE DRUG" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete the drug?')" />
+        </div>
+     </form>
+
+        <style>
+            .ui-autocomplete {
+                max-height: 150px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                max-width: 700px;
+            }
+        </style>
+
+<script src="~/Scripts/DeleteDrugView.js"></script>

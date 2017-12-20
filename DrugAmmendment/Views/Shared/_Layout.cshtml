@@ -1,0 +1,82 @@
+﻿@{ 
+    var siteUrl = System.Configuration.ConfigurationManager.AppSettings["Dashboard"] as string;
+    var userName = HttpContext.Current.User.Identity.Name as string;
+    if (!string.IsNullOrWhiteSpace(userName))
+    {
+        userName = userName.Split('\\')[1] as string;
+    }
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title For Drug Amendment</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top ">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="@siteUrl" class="navbar-brand HomeLink" title="Home">
+                    <img src="~/Images/home-icon.png" alt="Home Logo" class="Home" />Drug Amendment</a>
+            </div>
+            <div class="navbar-collapse collapse clearfix">
+                <img class="Logo" src="~/Images/adis_logo.png"/>
+            </div>
+            <span class="userName">User : @userName</span>
+        </div>
+        
+    </div>
+
+    <div class="container body-content">
+        @RenderBody()
+        <footer>
+            
+        </footer>
+    </div>
+
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-image: url('/AdisDrugAmendment/Images/DrugImg.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        .Logo {
+            float: right;
+            margin: 12px 0px 12px 0px;
+        }
+
+        .HomeLink {
+            font-size: 25px;
+            color: #002751;
+        }
+        .body-content {
+            margin-top: 20px;
+        }
+        .Home{
+            margin-bottom:5px;
+            margin-right:10px;
+        }
+        .userName {
+            position:fixed;
+            right:10px;
+            top:40px;
+            /*text-transform: uppercase;*/
+            font-weight: bold;
+            /*color: #002751;*/
+            color:white;
+        }
+    </style>
+</body>
+</html>
