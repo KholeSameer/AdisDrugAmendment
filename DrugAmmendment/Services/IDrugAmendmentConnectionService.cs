@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,9 @@ namespace DrugAmmendment.Services
         List<ExportToExcel> GetActiveDrugList(string ClientName, string CriteriaType);
         List<DrugDetails> GetDrugList(string ClientName, string CriteriaType);
         List<string> GetAutoCriteria(string criteria, string delivery, string criteriaType);
-        List<string> GetAutoTHSTerm(string criteria, string delivery, string criteriaType);        
+        List<string> GetAutoTHSTerm(string criteria, string delivery, string criteriaType);
+
+        string ExportUsingDatatable(string Delivery, string CriteriaType);
+        void ExportToExcelSheet(DataTable table, string filePath);
     }
 }

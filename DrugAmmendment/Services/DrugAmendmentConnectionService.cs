@@ -8,6 +8,7 @@ using System.Linq;
 using System.Web;
 using System.Collections;
 using System.Web.Mvc;
+using System.IO;
 
 namespace DrugAmmendment.Services
 {
@@ -365,10 +366,10 @@ namespace DrugAmmendment.Services
             return _criteriaType;
         }
 
-        public List<ExportToExcel> GetActiveDrugList(string ClientName, string CriteriaType)
+        public List<ExportToExcel> GetActiveDrugList(string Delivery, string CriteriaType)
         {
             List<ExportToExcel> _ddList = new List<ExportToExcel>();
-            _cmd = new SqlCommand($"select * from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = '{ClientName}' and CriteriaType = '{CriteriaType}' and IsActive = 1", _conn);
+            _cmd = new SqlCommand($"select * from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = '{Delivery}' and CriteriaType = '{CriteriaType}' and IsActive = 1", _conn);
             try
             {
                 _conn.Open();
@@ -524,6 +525,73 @@ namespace DrugAmmendment.Services
                 _cmd.Dispose();
             }
             return _leadTermList;
+        }
+
+        public string ExportUsingDatatable(string Delivery, string CriteriaType)
+        {
+            string pathDownload = "";
+            _cmd = new SqlCommand($"select Delivery,CriteriaType,Criteria,TermID,ModificationDate,CreationDate from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = '{Delivery}' and CriteriaType = '{CriteriaType}' and IsActive = 1", _conn);
+            try
+            {
+                SqlDataAdapter dAdapter = new SqlDataAdapter(_cmd);
+                DataTable dTable = new DataTable();
+                dAdapter.Fill(dTable);
+                string pathUser = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                pathDownload = Path.Combine(pathUser, "Downloads");
+                string FileName = Delivery.Substring(Delivery.IndexOf('.') + 1);
+                FileName = char.ToUpper(FileName[0]) + FileName.Substring(1);
+                FileName += "_" + CriteriaType + "-" + DateTime.Now.ToString("dd-mm-yyyy-HH-mm-ss-tt") + ".xls";
+                ExportToExcelSheet(dTable, pathDownload + @"\" + FileName);
+            }
+            catch (SqlException)
+            {
+                UserFriendlyMessage.setMessage("SQL Exception while Exporting to Excel Format");
+                throw;
+            }
+            catch (Exception)
+            {
+                UserFriendlyMessage.setMessage("Exception while Exporting to Excel Format");
+                throw;
+            }
+            finally
+            {
+                _cmd.Dispose();
+            }
+            return pathDownload;
+        }
+
+        public void ExportToExcelSheet(DataTable table, string filePath)
+        {
+            StreamWriter sw = new StreamWriter(filePath, false);
+            sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
+            sw.Write("<font style='font-size:10.0pt; font-family:Calibri;'>");
+            sw.Write("<BR><BR><BR>");
+            sw.Write("<Table border='1' bgColor='#ffffff ' borderColor='#000000 ' cellSpacing='0' cellPadding='0' style='font-size:10.0pt; font-family:Calibri; background:white;'> <TR>");
+            int columnscount = table.Columns.Count;
+
+            for (int j = 0; j < columnscount; j++)
+            {
+                sw.Write("<Td>");
+                sw.Write("<B>");
+                sw.Write(table.Columns[j].ToString());
+                sw.Write("</B>");
+                sw.Write("</Td>");
+            }
+            sw.Write("</TR>");
+            foreach (DataRow row in table.Rows)
+            {
+                sw.Write("<TR>");
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    sw.Write("<Td>");
+                    sw.Write(row[i].ToString());
+                    sw.Write("</Td>");
+                }
+                sw.Write("</TR>");
+            }
+            sw.Write("</Table>");
+            sw.Write("</font>");
+            sw.Close();
         }
     }
 }
