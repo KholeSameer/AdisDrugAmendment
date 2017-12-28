@@ -300,13 +300,13 @@ namespace DrugAmmendment.Controllers
             return Json(_criteriaType, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult GetActiveDrugList(string ClientName, string CriteriaType)
+        public JsonResult GetActiveDrugList(string Delivery, string CriteriaType)
         {
             List<ExportToExcel> _ddList = new List<ExportToExcel>();
 
             try
             {
-                _ddList = _drugAmendmentConnectionService.GetActiveDrugList(ClientName,CriteriaType);
+                _ddList = _drugAmendmentConnectionService.GetActiveDrugList(Delivery, CriteriaType);
             }
             catch (Exception)
             {
@@ -384,7 +384,7 @@ namespace DrugAmmendment.Controllers
             {
                 if (_drugAmendmentConnectionService.DeleteDrugFromDB(Delivery,CriteriaType,Criteria) > 0)
                 {
-                    AuditLogger(Delivery, CriteriaType, Criteria, "NonActive");
+                    AuditLogger(Delivery, CriteriaType, Criteria, "InActive");
                     Response.Write("<script>window.alert(\'The drug have been successfully deleted.\');window.location='DeleteDrugView';</script>");
                 }
                 else
@@ -432,40 +432,40 @@ namespace DrugAmmendment.Controllers
         }
 
         // Export to Excel
-        //private void ExportToExcel(DataTable table, string filePath)
-        //{
-        //    //filePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-        //    StreamWriter sw = new StreamWriter(filePath, false);
-        //    sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-        //    sw.Write("<font style='font-size:10.0pt; font-family:Calibri;'>");
-        //    sw.Write("<BR><BR><BR>");
-        //    sw.Write("<Table border='1' bgColor='#ffffff ' borderColor='#000000 ' cellSpacing='0' cellPadding='0' style='font-size:10.0pt; font-family:Calibri; background:white;'> <TR>");
-        //    int columnscount = table.Columns.Count;
+        private void ExportToExcel(DataTable table, string filePath)
+        {
+            //filePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+            StreamWriter sw = new StreamWriter(filePath, false);
+            sw.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
+            sw.Write("<font style='font-size:10.0pt; font-family:Calibri;'>");
+            sw.Write("<BR><BR><BR>");
+            sw.Write("<Table border='1' bgColor='#ffffff ' borderColor='#000000 ' cellSpacing='0' cellPadding='0' style='font-size:10.0pt; font-family:Calibri; background:white;'> <TR>");
+            int columnscount = table.Columns.Count;
 
-        //    for (int j = 0; j < columnscount; j++)
-        //    {
-        //        sw.Write("<Td>");
-        //        sw.Write("<B>");
-        //        sw.Write(table.Columns[j].ToString());
-        //        sw.Write("</B>");
-        //        sw.Write("</Td>");
-        //    }
-        //    sw.Write("</TR>");
-        //    foreach (DataRow row in table.Rows)
-        //    {
-        //        sw.Write("<TR>");
-        //        for (int i = 0; i < table.Columns.Count; i++)
-        //        {
-        //            sw.Write("<Td>");
-        //            sw.Write(row[i].ToString());
-        //            sw.Write("</Td>");
-        //        }
-        //        sw.Write("</TR>");
-        //    }
-        //    sw.Write("</Table>");
-        //    sw.Write("</font>");
-        //    sw.Close();
-        //}
+            for (int j = 0; j < columnscount; j++)
+            {
+                sw.Write("<Td>");
+                sw.Write("<B>");
+                sw.Write(table.Columns[j].ToString());
+                sw.Write("</B>");
+                sw.Write("</Td>");
+            }
+            sw.Write("</TR>");
+            foreach (DataRow row in table.Rows)
+            {
+                sw.Write("<TR>");
+                for (int i = 0; i < table.Columns.Count; i++)
+                {
+                    sw.Write("<Td>");
+                    sw.Write(row[i].ToString());
+                    sw.Write("</Td>");
+                }
+                sw.Write("</TR>");
+            }
+            sw.Write("</Table>");
+            sw.Write("</font>");
+            sw.Close();
+        }
 
         private void ExporttoExcel(DataTable table)
         {
@@ -518,18 +518,27 @@ namespace DrugAmmendment.Controllers
             System.Web.HttpContext.Current.Response.End();
         }
 
-        public void GetDatatable(string Delivery, string CriteriaType)
+        public JsonResult ExportUsingDatatable(string Delivery, string CriteriaType)
         {
-            string _connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
-            SqlConnection _conn = new SqlConnection(_connectionString);
-            SqlCommand _cmd = new SqlCommand($"select Delivery,CriteriaType,Criteria,TermID,ModificationDate,CreationDate from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = 'nl.apcer' and CriteriaType = 'descriptor' and IsActive = 1", _conn);
-
-            SqlDataAdapter dAdapter = new SqlDataAdapter(_cmd);
-            DataTable dTable = new DataTable();
-            dAdapter.Fill(dTable);
-            //ExportToExcel(dTable, @"D:\Excel\Excel" + DateTime.Now.ToString("dd-mm-yyyy HH-mm-ss t") + ".xls");
-            ExporttoExcel(dTable);
-
+            string _exportMsg = "";
+            try
+            {
+                _exportMsg = _drugAmendmentConnectionService.ExportUsingDatatable(Delivery, CriteriaType);
+            }
+            catch (Exception)
+            {
+                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
+                throw;
+            }
+            if (_exportMsg == "")
+            {
+                _exportMsg = "Error";
+                return Json(_exportMsg, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(_exportMsg, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }
