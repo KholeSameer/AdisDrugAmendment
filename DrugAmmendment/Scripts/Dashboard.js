@@ -40,7 +40,8 @@ $(window).load(function () {
             var clientName = $('#client').val();
             var criteriaType = $('#criteriaType').val();
             if (clientName != '' && criteriaType != '') {
-                ExportFunction_Server(clientName, criteriaType);
+                //ExportFunction_Server(clientName, criteriaType);
+                exportFunction(clientName, criteriaType);
             }
             else {
                 alert("All fields are mandatory.");
@@ -161,7 +162,7 @@ $(window).load(function () {
         });
     }
 
-    function ExportFunction(clientName, criteriaType) {
+    function exportFunction(clientName, criteriaType) {
         $.ajax({
             type: 'GET',
             contentType: 'application/json; charset=utf-8',
@@ -437,16 +438,17 @@ $(window).load(function () {
 
                 var ua = window.navigator.userAgent;
                 var msie = ua.indexOf("MSIE ");
+                var sa;
 
                 if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
                 {
-                    var name = $settings.fileName;
+                    name = $settings.fileName;
                     name += ".xls";
                     //console.log(name);
                     winObj = window.open("txt/html", "replace");
                     winObj.document.write(tab_text);
                     winObj.document.close();
-                    sa = winObj.document.execCommand("SaveAs", true, "Default_Name.xls");
+                    winObj.document.execCommand("SaveAs", true, "DrugList.xls");
                 }
                 else {
                     sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
@@ -485,7 +487,7 @@ $(window).load(function () {
         $.ajax({
             type: 'GET',
             contentType: 'application/json; charset=utf-8',
-            url: 'Home/ExportUsingDatatable',
+            url: 'AdisDrugAmendment/Home/ExportUsingDatatable',
             data: { Delivery: clientName, CriteriaType: criteriaType },
             dataType: 'json',
             success: function (data) {
