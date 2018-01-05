@@ -12,17 +12,27 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Services;
 using System.Web.UI;
+using DrugAmmendment.Services;
+using DrugAmmendment.Attributes;
+
 
 namespace DrugAmmendment.Controllers
 {
+    [AdisAuthorise(Roles = "admin")]
     public class HomeController : Controller
     {
         private IDrugAmendmentConnectionService _drugAmendmentConnectionService = null;
         string siteUrl = System.Configuration.ConfigurationManager.AppSettings["Dashboard"] as string;
 
+        public IAuthorizationProvider AuthorisationProvider { get; private set; }
+
         public HomeController()
         {
             _drugAmendmentConnectionService = new DrugAmendmentConnectionService();
+        }
+        public HomeController(IAuthorizationProvider authorisationProvider)
+        {
+            AuthorisationProvider = authorisationProvider;
         }
         public ActionResult Dashboard()
         {
