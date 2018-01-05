@@ -301,7 +301,7 @@ namespace DrugAmmendment.Services
                 UserFriendlyMessage.setMessage("SQL Exception while Deleting the Drug");
                 throw;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 UserFriendlyMessage.setMessage("Exception while Deleting the Drug");
                 throw;
@@ -488,7 +488,7 @@ namespace DrugAmmendment.Services
                     _criteriaList.Add(reader[0].ToString());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 UserFriendlyMessage.setMessage("Exception while fetching the Criteria List");
                 throw;
@@ -538,6 +538,14 @@ namespace DrugAmmendment.Services
                 dAdapter.Fill(dTable);
                 string pathUser = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                 pathDownload = Path.Combine(pathUser, "Downloads");
+
+                String ServerPath = System.Web.HttpContext.Current.Server.MapPath("Logs");
+                StreamWriter sw = new StreamWriter(ServerPath + @"\LogFile.log", false);
+                sw.Write(pathDownload);
+                sw.Flush();
+                sw.Close();
+                
+
                 string FileName = Delivery.Substring(Delivery.IndexOf('.') + 1);
                 FileName = char.ToUpper(FileName[0]) + FileName.Substring(1);
                 FileName += "_" + CriteriaType + "-" + DateTime.Now.ToString("dd-mm-yyyy-HH-mm-ss-tt") + ".xls";
@@ -548,7 +556,7 @@ namespace DrugAmmendment.Services
                 UserFriendlyMessage.setMessage("SQL Exception while Exporting to Excel Format");
                 throw;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 UserFriendlyMessage.setMessage("Exception while Exporting to Excel Format");
                 throw;

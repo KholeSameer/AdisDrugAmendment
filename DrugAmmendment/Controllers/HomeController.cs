@@ -527,8 +527,7 @@ namespace DrugAmmendment.Controllers
             }
             catch (Exception)
             {
-                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
-                throw;
+                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='Dashboard'</script>");
             }
             if (_exportMsg == "")
             {
