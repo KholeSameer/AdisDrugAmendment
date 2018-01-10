@@ -369,7 +369,7 @@ namespace DrugAmmendment.Services
         public List<ExportToExcel> GetActiveDrugList(string Delivery, string CriteriaType)
         {
             List<ExportToExcel> _ddList = new List<ExportToExcel>();
-            _cmd = new SqlCommand($"select * from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = '{Delivery}' and CriteriaType = '{CriteriaType}' and IsActive = 1", _conn);
+            _cmd = new SqlCommand($"select Delivery,CriteriaType,Criteria,ModificationDate,CreationDate from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery = '{Delivery}' and CriteriaType = '{CriteriaType}' and IsActive = 1", _conn);
             try
             {
                 _conn.Open();
@@ -382,27 +382,19 @@ namespace DrugAmmendment.Services
                     dd.Criteria = reader[2].ToString();
                     if (reader[3].Equals(System.DBNull.Value))
                     {
-                        dd.TermID = null;
+                        dd.ModificationDate = "Not Available";
                     }
                     else
                     {
-                        dd.TermID = Convert.ToInt32(reader[3]);
+                        dd.ModificationDate = reader[3].ToString();
                     }
-                    if (reader[5].Equals(System.DBNull.Value))
+                    if (reader[4].Equals(System.DBNull.Value))
                     {
-                        dd.ModificationDate = "Null";
-                    }
-                    else
-                    {
-                        dd.ModificationDate = reader[5].ToString();
-                    }
-                    if (reader[6].Equals(System.DBNull.Value))
-                    {
-                        dd.CreationDate = "Null";
+                        dd.CreationDate = "Not Available";
                     }
                     else
                     {
-                        dd.CreationDate = reader[6].ToString();
+                        dd.CreationDate = reader[4].ToString();
                     }
                     _ddList.Add(dd);
                 }
