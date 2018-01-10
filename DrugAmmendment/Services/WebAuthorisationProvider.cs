@@ -46,22 +46,26 @@ namespace DrugAmmendment.Services
         public bool IsInRole(string role)
         {
             WindowsPrincipal user = HttpContext.Current.User as WindowsPrincipal;
+            var session = HttpContext.Current.Session;
 
             bool isInRole = false;
             if (user != null)
             {
-                string key = "IsInRole-" + role;
-                if (HttpContext.Current.Session[key] != null)
+                string key = user.Identity.Name + "-IsInRole-" + role;
+                if (session[key] != null)
                 {
-                    isInRole = (bool)HttpContext.Current.Session[key];
+                    isInRole = (bool)session[key];
                 }
                 else
                 {
                     //heavy operation as it populates users group listing each time
                     isInRole = user.IsInRole(roles[role].Group);
-                    HttpContext.Current.Session[key] = isInRole;
+                    session[key] = isInRole;
                 }
             }
+            //#if DEBUG
+            //			isInRole = true;
+            //#endif
             return isInRole;
         }
 
@@ -82,27 +86,14 @@ namespace DrugAmmendment.Services
 
         private class Role
         {
-            //			private readonly string _name;
             private readonly string _group;
-            //			private readonly string _password;
-
-            //			public string Name
-            //			{
-            //				 get { return _name; }
-            //			}
             public string Group
             {
                 get { return _group; }
             }
-            //			public string Password
-            //			{
-            //				get { return _password; }
-            //			}
-            public Role(string group) //string name, string group, string password)
+            public Role(string group) 
             {
-                //_name = name;
                 _group = group;
-                //_password = password;
             }
         }
     }

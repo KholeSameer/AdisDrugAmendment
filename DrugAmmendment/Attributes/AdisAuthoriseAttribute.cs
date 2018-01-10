@@ -45,27 +45,8 @@ namespace DrugAmmendment.Attributes
 
             filterContext.HttpContext.Response.StatusCode = 401; //unauthorised return code
                                                                  //use this to throw an exception that can get handled by the HandleAttribute
+            // handle this exception in a messagebox or webpage 
             throw new Exception(string.Format("You are not allowed to perform this action (User: {0}).", authProvider.Username));
-            {
-                //This will return a 401 status code and will autoforward to a login page if forms authorisation is setup
-                //filterContext.Cancel = true;
-                //filterContext.Result = new HttpUnauthorizedResult();
-            }
-            {
-                //This method can be used to return an error page instead. It will be a "successful" request status-wise 
-                ////////////////////////////////////////////////////////////////////////////////////////////
-                //var errorInfo = new HandleErrorInfo(new InvalidUserException("you are bad. never come here again"),
-                //  filterContext.Controller.GetType().Name, filterContext.ActionMethod.Name);
-                //var result = new ViewResult()
-                //{
-                //  ViewName = "Error",
-                //  MasterName = "",
-                //  TempData = new TempDataDictionary(),
-                //  ViewData = new ViewDataDictionary() { Model = errorInfo },
-                //  ViewEngine = new WebFormViewEngine()
-                //};
-                //filterContext.Result = result;
-            }
         }
         private static IEnumerable<string> SplitString(string original)
         {

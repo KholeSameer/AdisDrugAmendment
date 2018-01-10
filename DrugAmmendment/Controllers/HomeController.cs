@@ -19,20 +19,18 @@ using DrugAmmendment.Attributes;
 namespace DrugAmmendment.Controllers
 {
     [AdisAuthorise(Roles = "admin")]
-    public class HomeController : Controller
+    public class HomeController : Controller, ISecureController
     {
         private IDrugAmendmentConnectionService _drugAmendmentConnectionService = null;
         string siteUrl = System.Configuration.ConfigurationManager.AppSettings["Dashboard"] as string;
 
         public IAuthorizationProvider AuthorisationProvider { get; private set; }
 
-        public HomeController()
-        {
-            _drugAmendmentConnectionService = new DrugAmendmentConnectionService();
-        }
-        public HomeController(IAuthorizationProvider authorisationProvider)
+        public HomeController(IAuthorizationProvider authorisationProvider ,
+            IDrugAmendmentConnectionService drugAmendmentConnectionService)
         {
             AuthorisationProvider = authorisationProvider;
+            _drugAmendmentConnectionService = drugAmendmentConnectionService;
         }
         public ActionResult Dashboard()
         {
@@ -59,9 +57,9 @@ namespace DrugAmmendment.Controllers
         [HttpPost]
         public void AddDrug(FormCollection form)
         {
-                string criteriaFromUser = form["criteria"].Trim();
-                string delivery = form["client"];
-                string criteriaType = form["criteriaType"];
+            string criteriaFromUser = form["criteria"].Trim();
+            string delivery = form["client"];
+            string criteriaType = form["criteriaType"];
             TempData["Client"] = delivery;
             TempData["CriteriaType"] = criteriaType;
             try
@@ -88,23 +86,23 @@ namespace DrugAmmendment.Controllers
                     }
                     else
                     {
-                            CheckIsAvailableActive(delivery, criteriaType, criteriaFromUser, null);
+                        CheckIsAvailableActive(delivery, criteriaType, criteriaFromUser, null);
                     }
 
                 }
                 else
                 {
                     bool isValidLeadTerm = false;
-                    
+
                     try
                     {
                         isValidLeadTerm = ValidateLeadTerm(criteriaFromUser);
                     }
                     catch (Exception)
                     {
-                        Response.Write("<script>window.alert(\'"+UserFriendlyMessage.getMessage()+"\');window.location='AddDrugView'</script>");
+                        Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
                     }
-                    
+
                     if (isValidLeadTerm)
                     {
                         ArrayList ThesData = new ArrayList();
@@ -116,7 +114,7 @@ namespace DrugAmmendment.Controllers
                         {
                             Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
                         }
-                        
+
                         string criteria = ThesData[0].ToString();
                         int? termID = Convert.ToInt32(ThesData[1]);
                         bool isAvailableNonActive = false;
@@ -128,7 +126,7 @@ namespace DrugAmmendment.Controllers
                         {
                             Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
                         }
-                        
+
                         if (isAvailableNonActive)
                         {
                             UpdateToActive(delivery, criteriaType, criteria);
@@ -148,7 +146,7 @@ namespace DrugAmmendment.Controllers
             }
             catch (Exception)
             {
-                Response.Write("<script>window.alert(\'"+ UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
+                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
             }
         }
         private void CheckIsAvailableActive(string delivery, string criteriaType, string criteria, int? termID)
@@ -170,10 +168,10 @@ namespace DrugAmmendment.Controllers
             }
             catch (Exception)
             {
-                Response.Write("<script>window.alert(\'"+UserFriendlyMessage.getMessage()+"\');window.location='AddDrugView'</script>");
+                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView'</script>");
             }
-            
-            
+
+
         }
         private void UpdateToActive(string delivery, string criteriaType, string criteria)
         {
@@ -192,9 +190,9 @@ namespace DrugAmmendment.Controllers
                     Response.Write("<script>window.alert(\'Drug Not Updated...! May be this drug is not present in DB...!\');window.location='AddDrugView';</script>");
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
-                Response.Write("<script>window.alert(\'"+UserFriendlyMessage.getMessage()+"\');window.location='AddDrugView';</script>");
+                Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView';</script>");
             }
         }
         private bool CheckIsAvailableNonActive(string delivery, string criteriaType, string criteria)
@@ -202,7 +200,7 @@ namespace DrugAmmendment.Controllers
             bool _flag = false;
             try
             {
-                _flag = _drugAmendmentConnectionService.CheckIsAvailableNonActive(delivery,criteriaType,criteria);
+                _flag = _drugAmendmentConnectionService.CheckIsAvailableNonActive(delivery, criteriaType, criteria);
             }
             catch (Exception)
             {
@@ -212,7 +210,7 @@ namespace DrugAmmendment.Controllers
         }
         private bool ValidateLeadTerm(string criteria)
         {
-            bool _flag = false ;
+            bool _flag = false;
 
             try
             {
@@ -231,7 +229,7 @@ namespace DrugAmmendment.Controllers
 
             try
             {
-                data  = _drugAmendmentConnectionService.GetDataFromThesTerm(criteria);
+                data = _drugAmendmentConnectionService.GetDataFromThesTerm(criteria);
             }
             catch (Exception)
             {
@@ -259,8 +257,8 @@ namespace DrugAmmendment.Controllers
             catch (Exception)
             {
                 Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='AddDrugView';</script>");
-            }           
-            
+            }
+
         }
         private void AuditLogger(string Delivery, string CriteriaType, string Criteria, string ActionType)
         {
@@ -270,7 +268,7 @@ namespace DrugAmmendment.Controllers
 
             try
             {
-                _drugAmendmentConnectionService.AuditLogger(Delivery,CriteriaType,Criteria,ActionType);
+                _drugAmendmentConnectionService.AuditLogger(Delivery, CriteriaType, Criteria, ActionType);
 
             }
             catch (Exception)
@@ -331,7 +329,7 @@ namespace DrugAmmendment.Controllers
 
             try
             {
-                _ddList = _drugAmendmentConnectionService.GetDrugList(ClientName,CriteriaType);
+                _ddList = _drugAmendmentConnectionService.GetDrugList(ClientName, CriteriaType);
             }
             catch (Exception)
             {
@@ -384,15 +382,15 @@ namespace DrugAmmendment.Controllers
             {
                 Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='DeleteDrugView'</script>");
             }
-            
+
         }
 
         private void DeleteDrugFromDB(string Delivery, string CriteriaType, string Criteria)
         {
-           
+
             try
             {
-                if (_drugAmendmentConnectionService.DeleteDrugFromDB(Delivery,CriteriaType,Criteria) > 0)
+                if (_drugAmendmentConnectionService.DeleteDrugFromDB(Delivery, CriteriaType, Criteria) > 0)
                 {
                     AuditLogger(Delivery, CriteriaType, Criteria, "InActive");
                     Response.Write("<script>window.alert(\'The drug have been successfully deleted.\');window.location='DeleteDrugView';</script>");
@@ -406,7 +404,7 @@ namespace DrugAmmendment.Controllers
             {
                 Response.Write("<script>window.alert(\'" + UserFriendlyMessage.getMessage() + "\');window.location='DeleteDrugView'</script>");
             }
-            
+
         }
 
 
@@ -416,7 +414,7 @@ namespace DrugAmmendment.Controllers
 
             try
             {
-                _criteriaList = _drugAmendmentConnectionService.GetAutoCriteria(criteria,delivery,criteriaType);
+                _criteriaList = _drugAmendmentConnectionService.GetAutoCriteria(criteria, delivery, criteriaType);
             }
             catch (Exception)
             {
@@ -432,7 +430,7 @@ namespace DrugAmmendment.Controllers
 
             try
             {
-                _leadTermList = _drugAmendmentConnectionService.GetAutoTHSTerm(criteria,delivery,criteriaType);
+                _leadTermList = _drugAmendmentConnectionService.GetAutoTHSTerm(criteria, delivery, criteriaType);
             }
             catch (Exception)
             {
@@ -479,14 +477,14 @@ namespace DrugAmmendment.Controllers
 
         private void ExporttoExcel(DataTable table)
         {
-          System.Web.HttpContext.Current.Response.Clear();
-          System.Web.HttpContext.Current.Response.ClearContent();
-          System.Web.HttpContext.Current.Response.ClearHeaders();
+            System.Web.HttpContext.Current.Response.Clear();
+            System.Web.HttpContext.Current.Response.ClearContent();
+            System.Web.HttpContext.Current.Response.ClearHeaders();
             System.Web.HttpContext.Current.Response.Buffer = true;
             System.Web.HttpContext.Current.Response.ContentType = "application/ms-excel";
             System.Web.HttpContext.Current.Response.Write(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.0 Transitional//EN"">");
-            var FileName = "DrugList - "+ DateTime.Now.ToString("dd - mm - yyyy HH - mm - ss tt").Replace(" "," - ") + ".xls";
-            System.Web.HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename="+ FileName);
+            var FileName = "DrugList - " + DateTime.Now.ToString("dd - mm - yyyy HH - mm - ss tt").Replace(" ", " - ") + ".xls";
+            System.Web.HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
 
             System.Web.HttpContext.Current.Response.Charset = "utf-8";
             System.Web.HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-1250");
