@@ -13,12 +13,10 @@ using System.Web.Mvc;
 using System.Web.Services;
 using System.Web.UI;
 using DrugAmmendment.Services;
-using DrugAmmendment.Attributes;
 
 
 namespace DrugAmmendment.Controllers
 {
-    [AdisAuthorise(Roles = "admin")]
     public class HomeController : Controller, ISecureController
     {
         private IDrugAmendmentConnectionService _drugAmendmentConnectionService = null;

@@ -48,6 +48,19 @@ namespace DrugAmmendment.Services
             WindowsPrincipal user = HttpContext.Current.User as WindowsPrincipal;
             var session = HttpContext.Current.Session;
 
+            if (user != null)
+            {
+                return user.IsInRole(roles[role].Group);
+            }
+
+            return false;
+        }
+
+        public bool ControlAuthorizationIsInRole(string role)
+        {
+            WindowsPrincipal user = HttpContext.Current.User as WindowsPrincipal;
+            var session = HttpContext.Current.Session;
+
             bool isInRole = false;
             if (user != null)
             {

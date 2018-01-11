@@ -122,6 +122,7 @@
     <Content Include="Content\mountains-clouds-forest-fog.jpg" />
     <Content Include="Content\Site.css" />
     <Content Include="DashBoard.aspx" />
+    <Content Include="Default.aspx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Images\2757a746c5519d3.jpg" />
@@ -196,6 +197,7 @@
     <Content Include="Scripts\jquery-ui.theme.min.css" />
     <Content Include="Scripts\jquery.dataTables.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="UnauthorizePage.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -237,8 +239,6 @@
       <DependentUpon>ADFeed.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Attributes\AdisAuthoriseAttribute.cs" />
-    <Compile Include="Attributes\HandleJsonErrorAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DashBoard.aspx.cs">
       <DependentUpon>DashBoard.aspx</DependentUpon>
@@ -246,6 +246,13 @@
     </Compile>
     <Compile Include="DashBoard.aspx.designer.cs">
       <DependentUpon>DashBoard.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\JsonReply.cs" />
     <Compile Include="Global.asax.cs">
@@ -261,6 +268,13 @@
     <Compile Include="Services\IDrugAmendmentConnectionService.cs" />
     <Compile Include="Services\ISecureController.cs" />
     <Compile Include="Services\WebAuthorisationProvider.cs" />
+    <Compile Include="UnauthorizePage.aspx.cs">
+      <DependentUpon>UnauthorizePage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UnauthorizePage.aspx.designer.cs">
+      <DependentUpon>UnauthorizePage.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
@@ -283,7 +297,9 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
