@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace DrugAmmendment.Services
 {
-    interface IDrugAmendmentConnectionService
+    public interface IDrugAmendmentConnectionService
     {
         string Username { get; }
 
@@ -26,7 +26,7 @@ namespace DrugAmmendment.Services
         int DeleteDrugFromDB(string Delivery, string CriteriaType, string Criteria);
 
         List<SelectListItem> PopulateClients();
-        List<SelectListItem>  PopulateCriteriaType(string ClientName);
+        List<SelectListItem> PopulateCriteriaType(string ClientName);
         List<ExportToExcel> GetActiveDrugList(string ClientName, string CriteriaType);
         List<DrugDetails> GetDrugList(string ClientName, string CriteriaType);
         List<string> GetAutoCriteria(string criteria, string delivery, string criteriaType);
