@@ -157,7 +157,7 @@ namespace DrugAmmendment.Controllers
             {
                 if (_drugAmendmentConnectionService.CheckIsAvailableActive(delivery, criteriaType, criteria, termID) > 0)
                 {
-                    Response.Write("<script>window.alert(\'This drug is already exist in active drug list.');window.location='AddDrugView'</script>");
+                    Response.Write("<script>window.alert(\'This drug is already exists in active drug list.');window.location='AddDrugView'</script>");
                 }
                 else
                 {
