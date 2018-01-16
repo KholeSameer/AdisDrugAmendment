@@ -77,9 +77,15 @@ $(window).load(function () {
                     var ClientNames = json.Text.substring(json.Text.indexOf(".") + 1);
                     ClientNames = ClientNames.charAt(0).toUpperCase() + ClientNames.slice(1);
                     if (ClientNames == 'Ranbaxy') {
-                        clientOptions += "<option value='" + json.Text + "'>" + 'Sunpharma' + "</option>";
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Sun Pharma' + "</option>";
                     }
-                    else{
+                    else if (ClientNames == 'Mylan_psur') {
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan Non-ICSR' + "</option>";
+                    }
+                    else if (ClientNames == 'Mylan') {
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan ICSR' + "</option>";
+                    }
+                    else {
                         clientOptions += "<option value='" + json.Text + "'>" + ClientNames + "</option>";
                     }
                 });

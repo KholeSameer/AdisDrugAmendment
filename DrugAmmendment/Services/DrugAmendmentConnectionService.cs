@@ -317,7 +317,7 @@ namespace DrugAmmendment.Services
         public List<SelectListItem> PopulateClients()
         {
             List<SelectListItem> _clients = new List<SelectListItem>();
-            _cmd = new SqlCommand("select Distinct Delivery from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery not in ('nl.novartis','nl.novartis_nonicsr')", _conn);
+            _cmd = new SqlCommand("select Distinct Delivery from [dbo].[ADFeedSelectionCriteriaLookup] where Delivery not in ('nl.novartis','nl.novartis_nonicsr') and IsActive = 1", _conn);
             try
             {
                 _conn.Open();
