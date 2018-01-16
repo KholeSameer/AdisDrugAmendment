@@ -77,9 +77,15 @@ $(window).load(function () {
                     var ClientNames = json.Text.substring(json.Text.indexOf(".") + 1);
                     ClientNames = ClientNames.charAt(0).toUpperCase() + ClientNames.slice(1);
                     if (ClientNames == 'Ranbaxy') {
-                        clientOptions += "<option value='" + json.Text + "'>" + 'Sunpharma' + "</option>";
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Sun Pharma' + "</option>";
                     }
-                    else{
+                    else if (ClientNames == 'Mylan_psur') {
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan Non-ICSR' + "</option>";
+                    }
+                    else if (ClientNames == 'Mylan') {
+                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan ICSR' + "</option>";
+                    }
+                    else {
                         clientOptions += "<option value='" + json.Text + "'>" + ClientNames + "</option>";
                     }
                 });
@@ -140,6 +146,9 @@ $(window).load(function () {
                             (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
                         
                     }
+                    else {
+                        CreationDate = "Not Available";
+                    }
                     if (json.ModificationDate != null) {
                         date = new Date(parseInt(json.ModificationDate.substr(6)));
                         ModificationDate = date.getFullYear() + "-" +
@@ -147,7 +156,15 @@ $(window).load(function () {
                             ("0" + date.getDate()).slice(-2) + " " + (date.getHours() < 10 ? '0' : '') + date.getHours() + ":" +
                             (date.getMinutes() < 10 ? '0' : '') + date.getMinutes();
                     }
-
+                    else {
+                        ModificationDate = "Not Available";
+                    }
+                    if (json.IsActive == 1) {
+                        json.IsActive = "Yes";
+                    }
+                    else {
+                        json.IsActive = "No";
+                    }
                     tableRow += '<tr><td>' + json.Criteria + '</td><td>' + ModificationDate + '</td><td>' + CreationDate + '</td><td>' + json.IsActive + '</td></tr>';
                 });
                 var appendData = table + tableHeader + tableRow;
@@ -174,6 +191,9 @@ $(window).load(function () {
                 var json = JSON.stringify(data);
                 var dynamicFileName = clientName.substring(clientName.indexOf(".") + 1);
                 dynamicFileName = dynamicFileName.charAt(0).toUpperCase() + dynamicFileName.slice(1);
+                if (dynamicFileName == "Ranbaxy") {
+                    dynamicFileName = "Sunpharma";
+                }
                 var sheetName = dynamicFileName + "_" + criteriaType;
                 dynamicFileName += "_" + criteriaType + "_" + (new Date($.now())).toString().slice(0, -31).slice(4);
                 dynamicFileName = dynamicFileName.replace(/ /g,"_");

@@ -29,6 +29,38 @@
                 overflow-x: hidden;
                 max-width: 700px;
             }
-        </style>
+            #mappedData {
+                /*color: #002751;
+                font-weight:bold;*/
+                width: 280px;
+            }
 
+            #client, #criteriaType {
+                display: none;
+            }
+
+            #criteria {
+                /*font-size: 16px;*/
+                /*color: #002751;
+                font-weight: bold;*/
+            }
+        </style>
+<script>
+    $(document).ready(function () {
+        var data = $('#mappedData').html();
+        data = data.substring(data.indexOf(".") + 1);
+        data = data.charAt(0).toUpperCase() + data.slice(1);
+        if (data == "Mylan_psur") {
+            data = "Mylan Non-ICSR";
+        }
+        else if (data == "Mylan") {
+            data = "Mylan ICSR";
+        }
+        else if (data == "Ranbaxy") {
+            data = "Sun Pharma";
+        }
+        console.log(data);
+        $('#mappedData').html(data);
+    })
+</script>
 <script src="~/Scripts/DeleteDrugView.js"></script>

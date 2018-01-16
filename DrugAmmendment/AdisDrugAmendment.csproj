@@ -146,9 +146,18 @@
       <DependentUpon>ADFeed.edmx</DependentUpon>
     </Content>
     <Content Include="Auth.config" />
-    <Content Include="Auth.LIVE.config" />
-    <Content Include="Auth.TEST.config" />
-    <Content Include="Auth.TRAIN.config" />
+    <Content Include="Auth.LIVE.config">
+      <DependentUpon>Auth.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Auth.TEST.config">
+      <DependentUpon>Auth.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Auth.TRAIN.config">
+      <DependentUpon>Auth.config</DependentUpon>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Dashboard.js" />
     <Content Include="Scripts\DataTables\DataTables-1.10.16\css\dataTables.bootstrap.css" />

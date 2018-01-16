@@ -9,9 +9,11 @@
 <h2 class="col-lg-offset-5">Add Drug</h2>
     <form action="@Url.Action("AddDrug", "Home")" method="post">
         <div class="col-lg-offset-4 col-md-6">
-            <label>Delivery: </label>
+            <label>Delivery: </label><br />
+            <span id="mappedData" class="form-control">@TempData["Client"]</span><br />
             <input type="text" name="client" id="client" value="@TempData["Client"]" readonly class="form-control" />
-            <label>Citeria Type: </label>
+            <label>Criteria Type: </label><br />
+            <span id="mappedData" class="form-control">@TempData["CriteriaType"]</span><br />
             <input type="text" name="criteriaType" id="criteriaType" value="@TempData["CriteriaType"]" readonly class="form-control" />
             <label>Criteria: </label>
             <input type="text" name="criteria" id="criteria" value="" class="form-control" /><br />
@@ -26,6 +28,36 @@
                 overflow-x: hidden;
                 max-width: 700px;
             }
+            #mappedData {
+                /*color: #002751;
+                font-weight:bold;*/
+                width:280px;
+            }
+            #client, #criteriaType {
+                display: none;
+            }
+            #criteria {
+                /*font-size: 16px;*/
+                /*color: #002751;
+                font-weight: bold;*/
+            }
         </style>
-
+<script>
+    $(document).ready(function () {
+        var data = $('#mappedData').html();
+        data = data.substring(data.indexOf(".") + 1);
+        data = data.charAt(0).toUpperCase() + data.slice(1);
+        if (data == "Mylan_psur") {
+            data = "Mylan Non-ICSR";
+        }
+        else if (data == "Mylan") {
+            data = "Mylan ICSR";
+        }
+        else if (data == "Ranbaxy") {
+            data = "Sun Pharma";
+        }
+        console.log(data);
+        $('#mappedData').html(data);
+    })
+</script>
 <script src="~/Scripts/AddDrugView.js"></script>
