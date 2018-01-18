@@ -15,10 +15,7 @@ namespace DrugAmmendment
         protected void Page_Load(object sender, EventArgs e)
         {
             _authProvider = new WebAuthorisationProvider();
-        }
 
-        protected void DrugAmendment_Click(object sender, EventArgs e)
-        {
             if (SplitString(roles).Any(role => _authProvider.IsInRole(role)))
             {
                 string siteUrl = System.Configuration.ConfigurationManager.AppSettings["Dashboard"] as string;
@@ -28,6 +25,11 @@ namespace DrugAmmendment
             {
                 Response.Redirect("UnauthorizePage.aspx");
             }
+        }
+
+        protected void DrugAmendment_Click(object sender, EventArgs e)
+        {
+
         }
 
         private static IEnumerable<string> SplitString(string original)
