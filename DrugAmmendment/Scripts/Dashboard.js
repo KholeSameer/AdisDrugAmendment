@@ -11,7 +11,12 @@ $(window).load(function () {
     });
 
     $(document).ready(function () {
-
+        $("#client").change(function () {
+            var catText = $('#client').find(':selected').text();
+            $("#hiddenMappedClient").val(catText);
+        });
+        
+        
         $('#client').change(function () {
             var clientName = $('#client').val();
             if (clientName == '') {
@@ -39,9 +44,10 @@ $(window).load(function () {
         $('#exportToExcel').click(function () {
             var clientName = $('#client').val();
             var criteriaType = $('#criteriaType').val();
+            var mappedClient = $('#client').find(':selected').text();
             if (clientName != '' && criteriaType != '') {
                 //ExportFunction_Server(clientName, criteriaType);
-                exportFunction(clientName, criteriaType);
+                exportFunction(clientName, criteriaType, mappedClient);
             }
             else {
                 alert("All fields are mandatory.");
@@ -51,8 +57,9 @@ $(window).load(function () {
         $('#deleteDrugBtn').click(function () {
             var clientName = $('#client').val();
             var criteriaType = $('#criteriaType').val();
+            var mappedClient = $('#client').find(':selected').text();
             if (clientName != '' && criteriaType != '') {
-                var url = "AdisDrugAmendment/Home/DeleteDrugView?clientName=" + clientName + "&criteriaType=" + criteriaType;
+                var url = "AdisDrugAmendment/Home/DeleteDrugView?clientName=" + clientName + "&criteriaType=" + criteriaType + "&mappedClient=" + mappedClient;
                 window.location.href = url;
             }
             else {
@@ -67,27 +74,13 @@ $(window).load(function () {
             type: 'GET',
             contentType: 'application/json; charset=utf-8',
             cache: false,
-            url: 'AdisDrugAmendment/Home/PopulateClients',
+            url: 'AdisDrugAmendment/Map/DeliveryMapping',
             dataType: 'json',
             success: function (data) {
                 var clientOptions;
                 clientOptions = "<option value=''>Select Customer</option>";
-                var json = JSON.stringify(data);
-                $.each(data, function (i, json) {
-                    var ClientNames = json.Text.substring(json.Text.indexOf(".") + 1);
-                    ClientNames = ClientNames.charAt(0).toUpperCase() + ClientNames.slice(1);
-                    if (ClientNames == 'Ranbaxy') {
-                        clientOptions += "<option value='" + json.Text + "'>" + 'Sun Pharma' + "</option>";
-                    }
-                    else if (ClientNames == 'Mylan_psur') {
-                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan Non-ICSR' + "</option>";
-                    }
-                    else if (ClientNames == 'Mylan') {
-                        clientOptions += "<option value='" + json.Text + "'>" + 'Mylan ICSR' + "</option>";
-                    }
-                    else {
-                        clientOptions += "<option value='" + json.Text + "'>" + ClientNames + "</option>";
-                    }
+                    $.each(data, function (key, value) {
+                        clientOptions += "<option value='" + key + "'>" + value + "</option>";
                 });
                 $('#client').html(clientOptions);
             },
@@ -179,22 +172,17 @@ $(window).load(function () {
         });
     }
 
-    function exportFunction(clientName, criteriaType) {
+    function exportFunction(clientName, criteriaType, mappedClient) {
         $.ajax({
             type: 'GET',
             contentType: 'application/json; charset=utf-8',
-            //url: 'Home/GetDatatable',
             url: 'AdisDrugAmendment/Home/GetActiveDrugList',
             data: { Delivery: clientName, CriteriaType: criteriaType },
             dataType: 'json',
             success: function (data) {
                 var json = JSON.stringify(data);
-                var dynamicFileName = clientName.substring(clientName.indexOf(".") + 1);
-                dynamicFileName = dynamicFileName.charAt(0).toUpperCase() + dynamicFileName.slice(1);
-                if (dynamicFileName == "Ranbaxy") {
-                    dynamicFileName = "Sunpharma";
-                }
-                var sheetName = dynamicFileName + "_" + criteriaType;
+                var dynamicFileName = mappedClient;
+                var sheetName = (dynamicFileName + "_" + criteriaType).replace(/ /g, "_");
                 dynamicFileName += "_" + criteriaType + "_" + (new Date($.now())).toString().slice(0, -31).slice(4);
                 dynamicFileName = dynamicFileName.replace(/ /g,"_");
                 $("#exportToExcel").excelexportjs({
@@ -464,7 +452,6 @@ $(window).load(function () {
                 {
                     name = $settings.fileName;
                     name += ".xls";
-                    //console.log(name);
                     winObj = window.open("txt/html", "replace");
                     winObj.document.write(tab_text);
                     winObj.document.close();
@@ -489,7 +476,6 @@ $(window).load(function () {
 
         var header = [];
         $.each(paramData[0], function (key, value) {
-            //console.log(key + '==' + value);
             var obj = {}
             obj["headertext"] = key;
             obj["datatype"] = "string";

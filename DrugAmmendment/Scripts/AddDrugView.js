@@ -1,5 +1,6 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
+    var data = $('#mappedData').html();
+    $("#hiddenMappedClient").val(data);
     var isBrandname = $('#criteriaType').val();
     if (isBrandname == 'BrandName') {
     }

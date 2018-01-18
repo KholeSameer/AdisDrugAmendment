@@ -41,6 +41,7 @@ namespace DrugAmmendment.Controllers
 
             string client = form["Client"];
             string criteriaType = form["criteriaType"];
+            string hiddenMappedClient = form["hiddenMappedClient"];
 
             if (TempData["Client"] == null)
             {
@@ -50,6 +51,10 @@ namespace DrugAmmendment.Controllers
             {
                 TempData["CriteriaType"] = criteriaType;
             }
+            if (TempData["hiddenMappedClient"] == null)
+            {
+                TempData["hiddenMappedClient"] = hiddenMappedClient;
+            }
             return View();
         }
         [HttpPost]
@@ -58,8 +63,10 @@ namespace DrugAmmendment.Controllers
             string criteriaFromUser = form["criteria"].Trim();
             string delivery = form["client"];
             string criteriaType = form["criteriaType"];
+            string hiddenMappedClient = form["hiddenMappedClient"];
             TempData["Client"] = delivery;
             TempData["CriteriaType"] = criteriaType;
+            TempData["hiddenMappedClient"] = hiddenMappedClient;
             try
             {
                 if (criteriaType == "BrandName")
@@ -138,6 +145,7 @@ namespace DrugAmmendment.Controllers
                     {
                         TempData["Client"] = delivery;
                         TempData["CriteriaType"] = criteriaType;
+                        TempData["hiddenMappedClient"] = hiddenMappedClient;
                         Response.Write("<script>window.alert(\'This drug is either not approved or not present in the thesaurus.\');window.location='AddDrugView'</script>");
                     }
                 }
@@ -350,6 +358,11 @@ namespace DrugAmmendment.Controllers
             {
                 TempData["CriteriaType"] = Request.QueryString["criteriaType"];
             }
+            if (TempData["hiddenMappedClient"] == null)
+            {
+                TempData["hiddenMappedClient"] = Request.QueryString["mappedClient"];
+            }
+            
             return View();
         }
 
@@ -358,9 +371,11 @@ namespace DrugAmmendment.Controllers
             string Criteria = form["criteria"].Trim();
             string CriteriaType = form["criteriaType"];
             string Delivery = form["client"];
+            string hiddenMappedClient = form["hiddenMappedClient"];
 
             TempData["Client"] = Delivery;
             TempData["CriteriaType"] = CriteriaType;
+            TempData["hiddenMappedClient"] = hiddenMappedClient;
             bool isAvailableNonActive = false;
 
             try

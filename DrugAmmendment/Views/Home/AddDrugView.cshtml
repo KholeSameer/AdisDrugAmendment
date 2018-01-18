@@ -10,7 +10,7 @@
     <form action="@Url.Action("AddDrug", "Home")" method="post">
         <div class="col-lg-offset-4 col-md-6">
             <label>Delivery: </label><br />
-            <span id="mappedData" class="form-control">@TempData["Client"]</span><br />
+            <span id="mappedData" class="form-control">@TempData["hiddenMappedClient"]</span><br />
             <input type="text" name="client" id="client" value="@TempData["Client"]" readonly class="form-control" />
 
             <label>Criteria Type: </label><br />
@@ -20,6 +20,7 @@
             <input type="text" name="criteria" id="criteria" value="" class="form-control" /><br />
             <input type="submit" name="btnSubmit" id="btnSubmit" value="ADD DRUG" class="btn btn-primary" onclick="return confirm('Are you sure you want to add the drug?')" />
         </div>
+        <input type="text" name="hiddenMappedClient" id="hiddenMappedClient" value="" />
     </form>
 
         <style>
@@ -42,23 +43,9 @@
                 /*color: #002751;
                 font-weight: bold;*/
             }
+            #hiddenMappedClient {
+                display: none;
+            }
         </style>
-<script>
-    $(document).ready(function () {
-        var data = $('#mappedData').html();
-        data = data.substring(data.indexOf(".") + 1);
-        data = data.charAt(0).toUpperCase() + data.slice(1);
-        if (data == "Mylan_psur") {
-            data = "Mylan Non-ICSR";
-        }
-        else if (data == "Mylan") {
-            data = "Mylan ICSR";
-        }
-        else if (data == "Ranbaxy") {
-            data = "Sun Pharma";
-        }
-        console.log(data);
-        $('#mappedData').html(data);
-    })
-</script>
+
 <script src="~/Scripts/AddDrugView.js"></script>
