@@ -21,7 +21,6 @@ namespace DrugAmmendment.Controllers
             _connectionString = ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString;
             _conn = new SqlConnection(_connectionString);
 
-            //_conn = new SqlConnection(@"Server=LAINPUMA0601\ADISBE;Initial Catalog=adisdb-local;User=usr_datacleaning;Password=usr_datacleaning;Application Name=AdisDrugAmendment");
             _cmd = new SqlCommand("select Description,Delivery from [dbo].[ADFeedDeliveryMapping] where IsActive = 1", _conn);
             try
             {

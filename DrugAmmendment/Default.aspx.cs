@@ -10,12 +10,11 @@ namespace DrugAmmendment
 {
     public partial class Default : System.Web.UI.Page
     {
-        private string roles = "admin,editor";
         private WebAuthorisationProvider _authProvider = null;
         protected void Page_Load(object sender, EventArgs e)
         {
             _authProvider = new WebAuthorisationProvider();
-
+            var roles = System.Configuration.ConfigurationManager.AppSettings["AllowedRoles"] as string; 
             if (SplitString(roles).Any(role => _authProvider.IsInRole(role)))
             {
                 string siteUrl = System.Configuration.ConfigurationManager.AppSettings["Dashboard"] as string;
